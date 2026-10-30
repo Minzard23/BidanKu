@@ -8,6 +8,8 @@ import kehamilanRoutes from "./src/routes/kehamilanRoutes.js";
 import konsultasiRoutes from "./src/routes/konsultasiRoutes.js";
 import obatRoutes from "./src/routes/obatRoutes.js";
 import pesananRoutes from "./src/routes/pesananRoutes.js";
+import artikelRoutes from "./src/routes/artikelRoutes.js";
+import agendaRoutes from "./src/routes/agendaRoutes.js";    
 
 dotenv.config();
 const app = express();
@@ -30,6 +32,8 @@ app.use("/api/kehamilan", kehamilanRoutes);
 app.use("/api/konsultasi", konsultasiRoutes);
 app.use("/api/obat", obatRoutes);
 app.use("/api/pesanan", pesananRoutes);
+app.use("/api/artikel", artikelRoutes);
+app.use
 
 const PORT = process.env.PORT || 5000;
 app.listen (PORT, () => {
