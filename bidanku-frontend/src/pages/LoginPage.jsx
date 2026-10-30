@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
+import {useAuth} from '../context/AuthContext';
 
 export default function LoginPage() {
+    const { login } = useAuth();
     const [form, setForm] = useState ({email: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -18,6 +20,7 @@ export default function LoginPage() {
             const res = await api.post('/auth/login', form);
             localStorage.setItem('token', res.data.token); 
             localStorage.setItem('user', JSON.stringify(res.data.user));
+            login(res.data.user, res.data.token);
             navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Terjadi kesalahan.');
