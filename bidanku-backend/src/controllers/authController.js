@@ -67,5 +67,6 @@ export async function saya(req, res) {
   if (rows.length === 0) {
     return res.status(404).json({ message: 'Pengguna tidak ditemukan.' });
   }
+  
   res.json({ user: rows[0] });
 }
