@@ -3,6 +3,9 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProfilPage from './pages/ProfilPage';
+import BookingPage from './pages/BookingPage';
+import KehamilanPage from './pages/KehamilanPage';
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/profil" element={<ProtectedRoute><ProfilPage /></ProtectedRoute>} />
+        <Route path="/booking" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
+        <Route path='/kehamilan' element={<ProtectedRoute><KehamilanPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

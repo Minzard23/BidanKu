@@ -1,9 +1,12 @@
+import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
-
   return (
+    <>
+    <Navbar/>
+    <div className='min-h-screen bg-pink-50 p-8'>
     <div className="min-h-screen bg-pink-50 p-8">
       <div className="bg-white rounded-xl shadow-md p-6 max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-4">
@@ -21,6 +24,8 @@ export default function DashboardPage() {
           Kamu login sebagai: <span className="font-semibold">{user?.role}</span>
         </p>
       </div>
+      </div>
     </div>
+    </>
   );
 }
