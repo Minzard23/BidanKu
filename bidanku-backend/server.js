@@ -36,6 +36,7 @@ app.use("/api/pesanan", pesananRoutes);
 app.use("/api/artikel", artikelRoutes);
 app.use("/api/agenda", agendaRoutes);
 app.use("/api/input-harian", inputHarianRoutes);
+app.use('/uploads', express.static('src/uploads'));
 
 const PORT = process.env.PORT || 5000;
 app.listen (PORT, () => {

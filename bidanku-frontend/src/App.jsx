@@ -7,6 +7,7 @@ import ProfilPage from './pages/ProfilPage';
 import BookingPage from './pages/BookingPage';
 import KehamilanPage from './pages/KehamilanPage';
 import KonsultasiPage from './pages/KonsultasiPage';
+import ObatPage from './pages/ObatPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/booking" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
         <Route path='/kehamilan' element={<ProtectedRoute><KehamilanPage /></ProtectedRoute>} />
         <Route path='/konsultasi' element={<ProtectedRoute><KonsultasiPage /></ProtectedRoute>} />
+        <Route path='/obat' element={<ProtectedRoute><ObatPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
