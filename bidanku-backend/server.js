@@ -5,6 +5,9 @@ import authRoutes from "./src/routes/authRoutes.js";
 import cors from "cors";
 import profileRoutes from "./src/routes/profilRoutes.js";
 import kehamilanRoutes from "./src/routes/kehamilanRoutes.js";
+import konsultasiRoutes from "./src/routes/konsultasiRoutes.js";
+import obatRoutes from "./src/routes/obatRoutes.js";
+import pesananRoutes from "./src/routes/pesananRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -24,6 +27,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/profil", profileRoutes);
 app.use("/api/kehamilan", kehamilanRoutes);
+app.use("/api/konsultasi", konsultasiRoutes);
+app.use("/api/obat", obatRoutes);
+app.use("/api/pesanan", pesananRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen (PORT, () => {
