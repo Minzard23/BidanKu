@@ -5,7 +5,7 @@ import upload from '../middleware/upload.js';
 
 const router = express.Router();
 
-router.post('/', verifikasiToken, izinkanRole('bidan', 'superadmin'), upload.single('foto'), tambahObat);
+router.post('/', verifikasiToken, izinkanRole('bidan', 'superadmin'), upload.array('foto', 3), tambahObat);
 router.get('/', verifikasiToken, lihatObat);
 
 export default router;

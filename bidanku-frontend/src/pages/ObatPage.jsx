@@ -27,7 +27,9 @@ export default function ObatPage() {
   data.append('deskripsi', formObat.deskripsi);
   data.append('harga', formObat.harga);
   data.append('stok', formObat.stok);
-  if (fileFoto) data.append('foto', fileFoto);
+  if (fileFoto) {
+    fileFoto.forEach((file) => data.append('foto', file));
+  }
 
   await api.post('/obat', data, { headers: { 'Content-Type': 'multipart/form-data' } });
   setFormObat({ nama: '', deskripsi: '', harga: '', stok: '' });
@@ -67,7 +69,7 @@ export default function ObatPage() {
               <input placeholder="Nama obat" value={formObat.nama} onChange={(e) => setFormObat({ ...formObat, nama: e.target.value })} className="w-full border p-2 rounded mb-2" />
               <input placeholder="Deskripsi" value={formObat.deskripsi} onChange={(e) => setFormObat({ ...formObat, deskripsi: e.target.value })} className="w-full border p-2 rounded mb-2" />
               <input type="number" placeholder="Harga" value={formObat.harga} onChange={(e) => setFormObat({ ...formObat, harga: e.target.value })} className="w-full border p-2 rounded mb-2" />
-              <input type="file" accept="image/*" onChange={(e) => setFileFoto(e.target.files[0])} className="w-full border p-2 rounded mb-2" />
+              <input type="file" accept="image/*" multiple onChange={(e) => setFileFoto([...e.target.files])} className="w-full border p-2 rounded mb-2" />
               <input type="number" placeholder="Stok" value={formObat.stok} onChange={(e) => setFormObat({ ...formObat, stok: e.target.value })} className="w-full border p-2 rounded mb-2" />
               <button type="submit" className="w-full bg-pink-600 text-white py-2 rounded">Tambah</button>
             </form>
@@ -78,7 +80,13 @@ export default function ObatPage() {
             {katalog.map((o) => (
               <div key={o.id} className="flex justify-between items-center border-b py-2">
                 <div>
-                    {o.foto && <img src={`http://localhost:5000${o.foto}`} className="w-12 h-12 object-cover rounded mr-3" />}
+                   {o.fotos && o.fotos.length > 0 && (
+  <div className="flex gap-2 mr-3">
+    {o.fotos.map((f, i) => (
+      <img key={i} src={`http://localhost:5000${f}`} className="w-20 h-20 object-cover rounded" />
+    ))}
+  </div>
+)}
                   <p className="font-medium">{o.nama}</p>
                   <p className="text-sm text-gray-500">Rp {o.harga.toLocaleString('id-ID')} — stok {o.stok}</p>
                 </div>
