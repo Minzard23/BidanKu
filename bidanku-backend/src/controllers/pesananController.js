@@ -1,9 +1,12 @@
 import pool from '../config/db.js';
 
 export async function buatPesanan(req, res) {
-  const { items } = req.body; // contoh: [{ obat_id: 1, jumlah: 2 }, { obat_id: 3, jumlah: 1 }]
+  const { items, alamat_pengiriman, metode_pembayaran } = req.body;
   if (!items || items.length === 0) {
     return res.status(400).json({ message: 'Pesanan harus ada minimal 1 item.' });
+  }
+  if (!alamat_pengiriman || !metode_pembayaran) {
+    return res.status(400).json({ message: 'Alamat pengiriman dan metode pembayaran wajib diisi.' });
   }
 
   const conn = await pool.getConnection();
@@ -24,8 +27,8 @@ export async function buatPesanan(req, res) {
     }
 
     const [pesananResult] = await conn.query(
-      `INSERT INTO pesanan_obat (pasien_id, total_harga) VALUES (?, ?)`,
-      [req.user.id, totalHarga]
+      `INSERT INTO pesanan_obat (pasien_id, total_harga, alamat_pengiriman, metode_pembayaran) VALUES (?, ?, ?, ?)`,
+      [req.user.id, totalHarga, alamat_pengiriman, metode_pembayaran]
     );
     const idPesanan = pesananResult.insertId;
 
@@ -69,4 +72,18 @@ export async function ubahStatusPesanan(req, res) {
   }
   await pool.query(`UPDATE pesanan_obat SET status = ? WHERE id = ?`, [status, id]);
   res.json({ message: 'Status pesanan berhasil diubah.' });
+}
+
+export async function uploadBuktiTransfer(req, res) {
+  const { id } = req.params;
+  if (!req.file) return res.status(400).json({ message: 'File bukti transfer wajib diupload.' });
+
+  const bukti = `/uploads/${req.file.filename}`;
+  const [result] = await pool.query(
+    `UPDATE pesanan_obat SET bukti_transfer = ? WHERE id = ? AND pasien_id = ?`,
+    [bukti, id, req.user.id]
+  );
+  if (result.affectedRows === 0) return res.status(404).json({ message: 'Pesanan tidak ditemukan.' });
+
+  res.json({ message: 'Bukti transfer berhasil diupload.' });
 }

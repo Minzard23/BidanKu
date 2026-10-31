@@ -10,7 +10,6 @@ import KehamilanPage from './pages/KehamilanPage';
 import KonsultasiPage from './pages/KonsultasiPage';
 import ObatPage from './pages/ObatPage';
 import ArtikelPage from './pages/ArtikelPage';
-import AgendaPage from './pages/AgendaPage';
 import InputHarianPage from './pages/InputHarianPage';
 
 function App() {
@@ -34,7 +33,6 @@ function App() {
         <Route path='/konsultasi' element={<ProtectedRoute><KonsultasiPage /></ProtectedRoute>} />
         <Route path='/obat' element={<ProtectedRoute><ObatPage /></ProtectedRoute>} />
         <Route path="/artikel" element={<ProtectedRoute><ArtikelPage /></ProtectedRoute>} />
-        <Route path='/agenda' element={<ProtectedRoute><AgendaPage/></ProtectedRoute>}/>
         <Route path="/input-harian" element={<ProtectedRoute><InputHarianPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>

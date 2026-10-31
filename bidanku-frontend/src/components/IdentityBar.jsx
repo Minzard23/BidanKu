@@ -1,0 +1,2 @@
+const logos=[['/logo-bidanku.png','BidanKu'],['/logo kabupaten bandung.jpg','Kabupaten Bandung'],['/logo-dinkes-bandung.jpg','Dinas Kesehatan Kabupaten Bandung'],['/logo-kemenkes.png','Kementerian Kesehatan'],['/logo-ibi.png','Ikatan Bidan Indonesia']];
+export default function IdentityBar(){return <footer className="identity-bar" aria-label="Logo BidanKu dan instansi">{logos.map(([src,alt])=><img key={src} src={src} alt={alt} title={alt}/>)}</footer>}

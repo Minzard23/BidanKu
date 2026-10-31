@@ -11,7 +11,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-stone-50">
       <nav className="px-6 py-4 flex items-center justify-between max-w-5xl mx-auto">
-        <span className="font-bold text-teal-800 text-lg">BidanKu</span>
+        <div className="flex items-center gap-2">
+          <img src="/logo-bidanku.png" alt="BidanKu" className="h-9 w-9 rounded-full object-cover" />
+        </div>
         <div className="flex gap-3">
           <Link to="/login" className="text-sm font-medium text-teal-700 px-4 py-2 hover:underline">Masuk</Link>
           <Link to="/register" className="text-sm font-medium bg-teal-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800">Daftar</Link>
@@ -48,6 +50,14 @@ export default function LandingPage() {
               <p className="text-sm text-slate-500">{f.desc}</p>
             </div>
           ))}
+        </div>
+
+        <p className="text-xs text-stone-400 text-center mt-14 mb-4 tracking-wide">BEKERJASAMA DENGAN</p>
+        <div className="flex justify-center items-center gap-8 flex-wrap">
+          <img src="/logo-kemenkes.png" style={{ height: 44 }} alt="Kemenkes" />
+          <img src="/logo-dinkes-bandung.jpg" style={{ height: 52, borderRadius: 8 }} alt="Dinkes Kab. Bandung" />
+          <img src="/logo%20kabupaten%20bandung.jpg" style={{ height: 52, borderRadius: 8 }} alt="Kabupaten Bandung" />
+          <img src="/logo-ibi.png" style={{ height: 52, borderRadius: 8 }} alt="IBI" />
         </div>
       </section>
 

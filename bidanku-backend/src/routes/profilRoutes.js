@@ -1,10 +1,11 @@
 import express from 'express';
 import { lihatProfil, updateProfil } from '../controllers/profilController.js';
 import { verifikasiToken, izinkanRole } from '../middleware/auth.js';
+import upload from '../middleware/upload.js';
 
 const router = express.Router();
 
 router.get('/', verifikasiToken, izinkanRole('pasien'), lihatProfil);
-router.put('/', verifikasiToken, izinkanRole('pasien'), updateProfil);
+router.put('/', verifikasiToken, izinkanRole('pasien'), upload.single('foto_profil'), updateProfil);
 
 export default router;

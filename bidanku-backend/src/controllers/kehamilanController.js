@@ -1,8 +1,8 @@
 import pool from '../config/db.js';
 
 export async function buatDataKehamilan(req, res) {
-    const { hpht, kehamilan_ke } = req.body;
-    if (!hpht) return res.body.status(400).json({ message: 'Tanggal HPHT harus diisi.' });
+    const { hpht, kehamilan_ke, tinggi_badan_awal, berat_badan_awal } = req.body;
+    if (!hpht) return res.status(400).json({ message: 'Tanggal HPHT harus diisi.' });
 
     const tanggalHPHT = new Date(hpht);
     const tanggalHpl = new Date(tanggalHPHT);
@@ -10,14 +10,14 @@ export async function buatDataKehamilan(req, res) {
     const hpl = tanggalHpl.toISOString().split('T')[0];
 
     const [result] = await pool.query(
-        `INSERT INTO data_kehamilan (user_id, kehamilan_ke, hpht, hpl) VALUES (?, ?, ?, ?)`,
-        [req.user.id, kehamilan_ke || 1, hpht, hpl]
+        `INSERT INTO data_kehamilan (user_id, kehamilan_ke, hpht, hpl, tinggi_badan_awal, berat_badan_awal) VALUES (?, ?, ?, ?, ?, ?)`,
+        [req.user.id, kehamilan_ke || 1, hpht, hpl, tinggi_badan_awal || null, berat_badan_awal || null]
     );
     res.status(201).json({ message: 'Data kehamilan berhasil dibuat.', id: result.insertId, hpl });
 }
 
 export async function lihatDataKehamilan(req, res) {
-    const {id, role} = req.user;
+    const { id, role } = req.user;
     let query, params;
     if (role === 'pasien') {
         query = `SELECT * FROM data_kehamilan WHERE user_id = ? ORDER BY id DESC`;

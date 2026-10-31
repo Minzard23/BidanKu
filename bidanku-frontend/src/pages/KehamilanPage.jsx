@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 export default function KehamilanPage() {
   const { user } = useAuth();
   const [daftar, setDaftar] = useState([]);
-  const [formKehamilan, setFormKehamilan] = useState({ hpht: '', kehamilan_ke: 1 });
+  const [formKehamilan, setFormKehamilan] = useState({ hpht: '', kehamilan_ke: 1, tinggi_badan_awal: '', berat_badan_awal: '' });
   const [formPeriksa, setFormPeriksa] = useState({
     idKehamilan: null, tanggal: '', usia_kehamilan_minggu: '', berat_badan: '',
     tekanan_darah: '', status_gizi: 'normal', keluhan: ''
@@ -27,7 +27,7 @@ export default function KehamilanPage() {
   async function handleSubmitKehamilan(e) {
     e.preventDefault();
     await api.post('/kehamilan', formKehamilan);
-    setFormKehamilan({ hpht: '', kehamilan_ke: 1 });
+    setFormKehamilan({ hpht: '', kehamilan_ke: 1, tinggi_badan_awal: '', berat_badan_awal: '' });
     muatUlang();
   }
 
@@ -42,35 +42,55 @@ export default function KehamilanPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-pink-50 p-8">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-xl font-bold text-pink-600 mb-4">Data Kehamilan</h1>
+      <div className="page-wrap">
+        <div className="page-inner">
+          <h1 className="page-title">Data Kehamilan</h1>
 
           {user.role === 'pasien' && (
-            <form onSubmit={handleSubmitKehamilan} className="bg-white p-4 rounded-xl shadow-md mb-6">
-              <label className="text-sm text-gray-600">HPHT (Hari Pertama Haid Terakhir)</label>
-              <input type="date" value={formKehamilan.hpht} onChange={(e) => setFormKehamilan({ ...formKehamilan, hpht: e.target.value })} className="w-full border p-2 rounded mb-2" />
-              <button type="submit" className="w-full bg-pink-600 text-white py-2 rounded">Catat Kehamilan Baru</button>
+            <form onSubmit={handleSubmitKehamilan} className="card mb-6">
+              <h3 className="font-semibold text-sm mb-3">Catat kehamilan baru</h3>
+              <label className="field-label">HPHT (Hari Pertama Haid Terakhir)</label>
+              <input type="date" required value={formKehamilan.hpht} onChange={(e) => setFormKehamilan({ ...formKehamilan, hpht: e.target.value })} className="input-field" />
+
+              <label className="field-label">Kehamilan ke-</label>
+              <input type="number" min="1" value={formKehamilan.kehamilan_ke} onChange={(e) => setFormKehamilan({ ...formKehamilan, kehamilan_ke: e.target.value })} className="input-field" />
+
+              <label className="field-label">Tinggi Badan Awal (cm)</label>
+              <input type="number" step="0.1" placeholder="Contoh: 158" value={formKehamilan.tinggi_badan_awal} onChange={(e) => setFormKehamilan({ ...formKehamilan, tinggi_badan_awal: e.target.value })} className="input-field" />
+
+              <label className="field-label">Berat Badan Sebelum Hamil (kg)</label>
+              <input type="number" step="0.1" placeholder="Contoh: 52" value={formKehamilan.berat_badan_awal} onChange={(e) => setFormKehamilan({ ...formKehamilan, berat_badan_awal: e.target.value })} className="input-field" />
+
+              <button type="submit" className="btn-primary">Catat Kehamilan</button>
             </form>
           )}
 
           {daftar.map((k) => (
-            <div key={k.id} className="bg-white p-4 rounded-xl shadow-md mb-4">
-              {k.nama_pasien && <p className="font-semibold">{k.nama_pasien}</p>}
-              <p>HPHT: {k.hpht?.split('T')[0]} — HPL: {k.hpl?.split('T')[0]}</p>
-              <p className="text-sm text-gray-500 mb-2">Status: {k.status}</p>
+            <div key={k.id} className="card mb-4">
+              {k.nama_pasien && <p className="font-semibold text-sm">{k.nama_pasien}</p>}
+              <p className="text-sm text-slate-700">HPHT: {k.hpht?.split('T')[0]} — HPL: {k.hpl?.split('T')[0]}</p>
+              {(k.tinggi_badan_awal || k.berat_badan_awal) && (
+                <p className="text-sm text-slate-500">
+                  {k.tinggi_badan_awal && `Tinggi: ${k.tinggi_badan_awal} cm`}
+                  {k.tinggi_badan_awal && k.berat_badan_awal && ' — '}
+                  {k.berat_badan_awal && `Berat awal: ${k.berat_badan_awal} kg`}
+                </p>
+              )}
+              <p className="text-sm text-slate-400 mb-3">Status: {k.status}</p>
 
-              <h3 className="font-semibold text-sm mt-3 mb-1">Riwayat Pemeriksaan:</h3>
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Riwayat pemeriksaan</h4>
+              {(pemeriksaan[k.id] || []).length === 0 && <p className="text-sm text-slate-400">Belum ada pemeriksaan.</p>}
               {(pemeriksaan[k.id] || []).map((p) => (
-                <div key={p.id} className="text-sm border-t pt-1 mb-1">
+                <div key={p.id} className="text-sm border-t border-stone-100 pt-2 mt-2">
                   {p.tanggal?.split('T')[0]} — BB: {p.berat_badan}kg, TD: {p.tekanan_darah}, Gizi: {p.status_gizi}
+                  {p.keluhan && <span className="text-slate-400"> · {p.keluhan}</span>}
                 </div>
               ))}
 
               {(user.role === 'bidan' || user.role === 'superadmin') && (
                 <button
                   onClick={() => setFormPeriksa({ ...formPeriksa, idKehamilan: k.id })}
-                  className="text-xs bg-pink-500 text-white px-2 py-1 rounded mt-2"
+                  className="btn-secondary bg-teal-700 text-white mt-3"
                 >
                   Catat Pemeriksaan Baru
                 </button>
@@ -79,19 +99,25 @@ export default function KehamilanPage() {
           ))}
 
           {formPeriksa.idKehamilan && (
-            <form onSubmit={handleSubmitPeriksa} className="bg-white p-4 rounded-xl shadow-md">
-              <h3 className="font-semibold mb-2">Catat Pemeriksaan (ID Kehamilan: {formPeriksa.idKehamilan})</h3>
-              <input type="date" placeholder="Tanggal" value={formPeriksa.tanggal} onChange={(e) => setFormPeriksa({ ...formPeriksa, tanggal: e.target.value })} className="w-full border p-2 rounded mb-2" />
-              <input type="number" placeholder="Usia kehamilan (minggu)" value={formPeriksa.usia_kehamilan_minggu} onChange={(e) => setFormPeriksa({ ...formPeriksa, usia_kehamilan_minggu: e.target.value })} className="w-full border p-2 rounded mb-2" />
-              <input type="number" step="0.1" placeholder="Berat badan (kg)" value={formPeriksa.berat_badan} onChange={(e) => setFormPeriksa({ ...formPeriksa, berat_badan: e.target.value })} className="w-full border p-2 rounded mb-2" />
-              <input placeholder="Tekanan darah" value={formPeriksa.tekanan_darah} onChange={(e) => setFormPeriksa({ ...formPeriksa, tekanan_darah: e.target.value })} className="w-full border p-2 rounded mb-2" />
-              <select value={formPeriksa.status_gizi} onChange={(e) => setFormPeriksa({ ...formPeriksa, status_gizi: e.target.value })} className="w-full border p-2 rounded mb-2">
+            <form onSubmit={handleSubmitPeriksa} className="card">
+              <h3 className="font-semibold text-sm mb-3">Catat Pemeriksaan</h3>
+              <label className="field-label">Tanggal</label>
+              <input type="date" value={formPeriksa.tanggal} onChange={(e) => setFormPeriksa({ ...formPeriksa, tanggal: e.target.value })} className="input-field" />
+              <label className="field-label">Usia kehamilan (minggu)</label>
+              <input type="number" value={formPeriksa.usia_kehamilan_minggu} onChange={(e) => setFormPeriksa({ ...formPeriksa, usia_kehamilan_minggu: e.target.value })} className="input-field" />
+              <label className="field-label">Berat badan (kg)</label>
+              <input type="number" step="0.1" value={formPeriksa.berat_badan} onChange={(e) => setFormPeriksa({ ...formPeriksa, berat_badan: e.target.value })} className="input-field" />
+              <label className="field-label">Tekanan darah</label>
+              <input value={formPeriksa.tekanan_darah} onChange={(e) => setFormPeriksa({ ...formPeriksa, tekanan_darah: e.target.value })} className="input-field" />
+              <label className="field-label">Status gizi</label>
+              <select value={formPeriksa.status_gizi} onChange={(e) => setFormPeriksa({ ...formPeriksa, status_gizi: e.target.value })} className="input-field">
                 <option value="kurang">Kurang</option>
                 <option value="normal">Normal</option>
                 <option value="lebih">Lebih</option>
               </select>
-              <input placeholder="Keluhan" value={formPeriksa.keluhan} onChange={(e) => setFormPeriksa({ ...formPeriksa, keluhan: e.target.value })} className="w-full border p-2 rounded mb-2" />
-              <button type="submit" className="w-full bg-pink-600 text-white py-2 rounded">Simpan Pemeriksaan</button>
+              <label className="field-label">Keluhan</label>
+              <input value={formPeriksa.keluhan} onChange={(e) => setFormPeriksa({ ...formPeriksa, keluhan: e.target.value })} className="input-field" />
+              <button type="submit" className="btn-primary">Simpan Pemeriksaan</button>
             </form>
           )}
         </div>

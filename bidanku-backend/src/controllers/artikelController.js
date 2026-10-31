@@ -1,12 +1,14 @@
 import pool from '../config/db.js';
 
 export async function buatArtikel(req, res) {
-  const { judul, konten, gambar } = req.body;
+  const { judul, konten } = req.body;
   if (!judul || !konten) return res.status(400).json({ message: 'Judul dan konten wajib diisi.' });
+
+  const gambar = req.file ? `/uploads/${req.file.filename}` : null;
 
   const [result] = await pool.query(
     `INSERT INTO artikel (bidan_id, judul, konten, gambar) VALUES (?, ?, ?, ?)`,
-    [req.user.id, judul, konten, gambar || null]
+    [req.user.id, judul, konten, gambar]
   );
   res.status(201).json({ message: 'Artikel berhasil dibuat.', id: result.insertId });
 }

@@ -40,37 +40,49 @@ export default function KonsultasiPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-pink-50 p-8">
-        <div className="max-w-2xl mx-auto flex gap-4">
-          {user.role !== 'pasien' && (
-            <div className="bg-white rounded-xl shadow-md p-3 w-48">
-              <h2 className="font-semibold text-sm mb-2">Pasien</h2>
-              {daftarPasien.map((p) => (
-                <button
-                  key={p.pasien_id}
-                  onClick={() => setPasienAktif(p.pasien_id)}
-                  className={`block w-full text-left text-sm p-2 rounded mb-1 ${pasienAktif === p.pasien_id ? 'bg-pink-100' : ''}`}
-                >
-                  {p.nama} {p.belum_dibaca > 0 && <span className="text-red-500">({p.belum_dibaca})</span>}
-                </button>
-              ))}
-            </div>
-          )}
+      <div className="page-wrap">
+        <div className="page-inner" style={{ maxWidth: 900 }}>
+          <h1 className="page-title">Konsultasi</h1>
+          <div className="flex gap-4" style={{ height: 460 }}>
+            {user.role !== 'pasien' && (
+              <div className="card" style={{ width: 200, overflowY: 'auto', padding: 12 }}>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Pasien</p>
+                {daftarPasien.length === 0 && <p className="text-sm text-slate-400">Belum ada percakapan.</p>}
+                {daftarPasien.map((p) => (
+                  <button
+                    key={p.pasien_id}
+                    onClick={() => setPasienAktif(p.pasien_id)}
+                    className="block w-full text-left text-sm p-2 rounded-lg mb-1"
+                    style={{ background: pasienAktif === p.pasien_id ? '#f0fdfa' : 'transparent', color: pasienAktif === p.pasien_id ? '#0f766e' : '#334155', fontWeight: pasienAktif === p.pasien_id ? 700 : 400 }}
+                  >
+                    {p.nama} {p.belum_dibaca > 0 && <span style={{ color: '#dc2626' }}>({p.belum_dibaca})</span>}
+                  </button>
+                ))}
+              </div>
+            )}
 
-          <div className="flex-1 bg-white rounded-xl shadow-md p-4 flex flex-col h-96">
-            <div className="flex-1 overflow-y-auto mb-3">
-              {pesanList.map((p) => (
-                <div key={p.id} className={`mb-2 ${p.pengirim_id === user.id ? 'text-right' : ''}`}>
-                  <span className={`inline-block px-3 py-1 rounded-lg text-sm ${p.pengirim_id === user.id ? 'bg-pink-500 text-white' : 'bg-gray-100'}`}>
-                    {p.pesan}
-                  </span>
-                </div>
-              ))}
+            <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 16 }}>
+              <div style={{ flex: 1, overflowY: 'auto', marginBottom: 12 }}>
+                {pesanList.map((p) => (
+                  <div key={p.id} style={{ marginBottom: 8, textAlign: p.pengirim_id === user.id ? 'right' : 'left' }}>
+                    <span
+                      style={{
+                        display: 'inline-block', padding: '7px 12px', borderRadius: 12, fontSize: 13.5, maxWidth: '70%',
+                        background: p.pengirim_id === user.id ? '#0f766e' : '#f1f5f9',
+                        color: p.pengirim_id === user.id ? '#fff' : '#1e293b',
+                      }}
+                    >
+                      {p.pesan}
+                    </span>
+                  </div>
+                ))}
+                {pesanList.length === 0 && <p className="text-sm text-slate-400">Belum ada pesan.</p>}
+              </div>
+              <form onSubmit={kirim} className="flex gap-2">
+                <input value={pesanBaru} onChange={(e) => setPesanBaru(e.target.value)} className="input-field" style={{ marginBottom: 0 }} placeholder="Tulis pesan..." />
+                <button type="submit" className="btn-primary" style={{ width: 'auto', padding: '10px 20px' }}>Kirim</button>
+              </form>
             </div>
-            <form onSubmit={kirim} className="flex gap-2">
-              <input value={pesanBaru} onChange={(e) => setPesanBaru(e.target.value)} className="flex-1 border p-2 rounded" placeholder="Tulis pesan..." />
-              <button type="submit" className="bg-pink-600 text-white px-4 rounded">Kirim</button>
-            </form>
           </div>
         </div>
       </div>
