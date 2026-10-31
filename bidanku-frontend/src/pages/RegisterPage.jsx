@@ -23,51 +23,48 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-50">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-pink-600 mb-6">Daftar BidanKu</h1>
+    <div className="min-h-screen flex">
+      <div className="hidden lg:block lg:w-1/2 relative bg-teal-900">
+        <img src="/hero-klinik.png" alt="Klinik BidanKu" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-teal-950/80 via-teal-900/20 to-transparent" />
+        <div className="absolute bottom-10 left-10 right-10 text-white">
+          <p className="text-2xl font-semibold leading-snug">Daftar sekali, pantau kehamilan dari mana saja.</p>
+          <p className="text-teal-100 text-sm mt-2">Praktik Bidan Lilis</p>
+        </div>
+      </div>
 
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-stone-50">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-teal-800">Daftar Akun</h1>
+            <p className="text-slate-500 text-sm mt-1">Khusus untuk pasien</p>
+          </div>
 
-        <input
-          name="nama"
-          placeholder="Nama lengkap"
-          value={form.nama}
-          onChange={handleChange}
-          className="w-full border p-2 rounded mb-3"
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full border p-2 rounded mb-3"
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="w-full border p-2 rounded mb-3"
-        />
-        <input
-          name="no_hp"
-          placeholder="No. HP"
-          value={form.no_hp}
-          onChange={handleChange}
-          className="w-full border p-2 rounded mb-4"
-        />
+          {error && (
+            <div className="bg-red-50 text-red-600 text-sm px-3 py-2 rounded-lg mb-4 border border-red-100">
+              {error}
+            </div>
+          )}
 
-        <button type="submit" className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700">
-          Daftar
-        </button>
+          <label className="field-label">Nama Lengkap</label>
+          <input name="nama" placeholder="Nama lengkap" value={form.nama} onChange={handleChange} className="input-field" />
 
-        <p className="text-sm text-center mt-4">
-          Sudah punya akun? <Link to="/login" className="text-pink-600">Login</Link>
-        </p>
-      </form>
+          <label className="field-label">Email</label>
+          <input name="email" type="email" placeholder="nama@email.com" value={form.email} onChange={handleChange} className="input-field" />
+
+          <label className="field-label">Password</label>
+          <input name="password" type="password" placeholder="••••••••" value={form.password} onChange={handleChange} className="input-field" />
+
+          <label className="field-label">No. HP (opsional)</label>
+          <input name="no_hp" placeholder="08xxxxxxxxxx" value={form.no_hp} onChange={handleChange} className="input-field" />
+
+          <button type="submit" className="btn-primary mt-2">Daftar</button>
+
+          <p className="text-sm text-center mt-6 text-slate-500">
+            Sudah punya akun? <Link to="/login" className="text-teal-700 font-semibold hover:underline">Masuk</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

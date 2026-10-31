@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -9,16 +10,16 @@ import KehamilanPage from './pages/KehamilanPage';
 import KonsultasiPage from './pages/KonsultasiPage';
 import ObatPage from './pages/ObatPage';
 import ArtikelPage from './pages/ArtikelPage';
-import AgendaPage from './pages/AgendaPage';  
+import AgendaPage from './pages/AgendaPage';
 import InputHarianPage from './pages/InputHarianPage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<Navigate to="/login" />} />
         <Route
           path="/dashboard"
           element={
@@ -35,7 +36,6 @@ function App() {
         <Route path="/artikel" element={<ProtectedRoute><ArtikelPage /></ProtectedRoute>} />
         <Route path='/agenda' element={<ProtectedRoute><AgendaPage/></ProtectedRoute>}/>
         <Route path="/input-harian" element={<ProtectedRoute><InputHarianPage /></ProtectedRoute>} />
-
       </Routes>
     </BrowserRouter>
   );

@@ -1,64 +1,67 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
-import {useAuth} from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
-    const { login } = useAuth();
-    const [form, setForm] = useState ({email: '', password: '' });
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-    function handleChange(e) {
-        setForm({ ...form, [e.target.name]: e.target.value });
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError('');
+    try {
+      const res = await api.post('/auth/login', form);
+      login(res.data.user, res.data.token);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Terjadi kesalahan.');
     }
+  }
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setError('');
-        try {
-            const res = await api.post('/auth/login', form);
-            localStorage.setItem('token', res.data.token); 
-            localStorage.setItem('user', JSON.stringify(res.data.user));
-            login(res.data.user, res.data.token);
-            navigate('/dashboard');
-        } catch (err) {
-            setError(err.response?.data?.message || 'Terjadi kesalahan.');
-        }
-    }
+  return (
+    <div className="min-h-screen flex">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-stone-50">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-teal-800">BidanKu</h1>
+            <p className="text-slate-500 text-sm mt-1">Masuk ke akun kamu</p>
+          </div>
 
-    return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-50">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-pink-600 mb-6">Login BidanKu</h1>
+          {error && (
+            <div className="bg-red-50 text-red-600 text-sm px-3 py-2 rounded-lg mb-4 border border-red-100">
+              {error}
+            </div>
+          )}
 
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          <label className="field-label">Email</label>
+          <input name="email" type="email" placeholder="nama@email.com" value={form.email} onChange={handleChange} className="input-field" />
 
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full border p-2 rounded mb-3"
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="w-full border p-2 rounded mb-4"
-        />
+          <label className="field-label">Password</label>
+          <input name="password" type="password" placeholder="••••••••" value={form.password} onChange={handleChange} className="input-field" />
 
-        <button type="submit" className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700">
-          Login
-        </button>
+          <button type="submit" className="btn-primary mt-2">Masuk</button>
 
-        <p className="text-sm text-center mt-4">
-          Belum punya akun? <Link to="/register" className="text-pink-600">Daftar</Link>
-        </p>
-      </form>
+          <p className="text-sm text-center mt-6 text-slate-500">
+            Belum punya akun? <Link to="/register" className="text-teal-700 font-semibold hover:underline">Daftar</Link>
+          </p>
+        </form>
+      </div>
+
+      <div className="hidden lg:block lg:w-1/2 relative bg-teal-900">
+        <img src="/hero-klinik.png" alt="Klinik BidanKu" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-teal-950/80 via-teal-900/20 to-transparent" />
+        <div className="absolute bottom-10 left-10 right-10 text-white">
+          <p className="text-2xl font-semibold leading-snug">Pendampingan kehamilan & kesehatan ibu, dalam satu tempat.</p>
+          <p className="text-teal-100 text-sm mt-2">Praktik Bidan Lilis</p>
+        </div>
+      </div>
     </div>
   );
 }
